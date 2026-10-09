@@ -1,0 +1,35 @@
+Name: Ayush Kumar
+USN : 1WA24CS074
+========================================
+A* Case 1: g(n) = depth, h(n) = misplaced tiles
+
+Step 0  (initial)   g = 0, h = 4, f = 4
+2 8 3
+1 6 4
+7 _ 5
+
+Step 1  (move: Up)   g = 1, h = 3, f = 4
+2 8 3
+1 _ 4
+7 6 5
+
+Step 2  (move: Up)   g = 2, h = 3, f = 5
+2 _ 3
+1 8 4
+7 6 5
+
+Step 3  (move: Left)   g = 3, h = 2, f = 5
+_ 2 3
+1 8 4
+7 6 5
+
+Step 4  (move: Down)   g = 4, h = 1, f = 5
+1 2 3
+_ 8 4
+7 6 5
+
+Step 5  (move: Right)   g = 5, h = 0, f = 5
+1 2 3
+8 _ 4
+7 6 5
+
