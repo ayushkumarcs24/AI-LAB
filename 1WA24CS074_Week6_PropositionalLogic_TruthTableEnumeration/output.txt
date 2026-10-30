@@ -1,0 +1,21 @@
+Name: Ayush Kumar
+USN : 1WA24CS074
+
+P     | Q     | R     | IMPLIES(Q, P) | IMPLIES(P, NOT(Q)) | OR(Q, R) | R     | IMPLIES(R, P) | IMPLIES(Q, R) | KB   
+---------------------------------------------------------------------------------------------------------------------
+T     | T     | T     | T             | F                  | T        | T     | T             | T             | F    
+T     | T     | F     | T             | F                  | T        | F     | T             | F             | F    
+T     | F     | T     | T             | T                  | T        | T     | T             | T             | T    
+T     | F     | F     | T             | T                  | F        | F     | T             | T             | F    
+F     | T     | T     | F             | T                  | T        | T     | F             | T             | F    
+F     | T     | F     | F             | T                  | T        | F     | T             | F             | F    
+F     | F     | T     | T             | T                  | T        | T     | F             | T             | T    
+F     | F     | F     | T             | T                  | F        | F     | T             | T             | F    
+
+Models of KB:
+   {'P': True, 'Q': False, 'R': True}
+   {'P': False, 'Q': False, 'R': True}
+
+KB entails R      ? True
+KB entails R -> P ? False
+KB entails Q -> R ? True
