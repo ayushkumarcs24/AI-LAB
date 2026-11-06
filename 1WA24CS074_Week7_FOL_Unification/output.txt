@@ -1,0 +1,24 @@
+Name : Ayush Kumar
+USN  : 1WA24CS074
+--------------------------------------------------
+
+Unify(Eats(x, Apple), Eats(Riya, y))
+  MGU    : { x/Riya, y/Apple }
+  Unified: Eats(Riya, Apple)
+
+Unify(P(x, h(y)), P(Aa, f(z)))
+  Result : FAIL
+  Reason : symbols differ: 'h' and 'f' are different, cannot unify h(y) with f(z)
+
+Unify(p(f(A), g(y)), p(x, x))
+  Result : FAIL
+  Reason : symbols differ: 'f' and 'g' are different, cannot unify f(A) with g(y)
+
+Unify(Knows(John, x), Knows(x, Elisabeth))
+  Result : FAIL
+  Reason : different constants: 'John' and 'Elisabeth' cannot be made equal
+
+Unify(Knows(John, x), Knows(y, Elisabeth))
+  MGU    : { y/John, x/Elisabeth }
+  Unified: Knows(John, Elisabeth)
+
