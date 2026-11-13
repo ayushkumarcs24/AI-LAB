@@ -1,118 +1,144 @@
 
-# BMSCE - Artificial Intelligence Lab
-# Forward Chaining
-# Problem: Prove Robert is Criminal
+import re
 
 print("======================================")
-print("          BMSCE - AI LAB")
+print("           BMSCE - AI LAB")
 print("======================================")
 print("Name : AYUSH KUMAR")
-print("USN  : 1WA24CS074")
+print("USN  : YOUR_USN")
 print("Experiment: Forward Chaining")
 print("======================================")
 
-# Initial Knowledge Base
-facts = [
-    ("American", "Robert"),
-    ("Missile", "T1"),
-    ("Owns", "A", "T1"),
-    ("Enemy", "A", "America")
+print("\nEnter the problem statement")
+print("(Press Enter twice to finish):")
+
+lines = []
+while True:
+    line = input()
+    if line == "":
+        break
+    lines.append(line)
+
+statement = " ".join(lines)
+
+# Extract information from statement
+seller_match = re.search(
+    r"sold to it by ([A-Za-z]+)", statement, re.I
+)
+country_match = re.search(
+    r"Country ([A-Za-z]+)", statement, re.I
+)
+
+seller = seller_match.group(1).capitalize() if seller_match else "Robert"
+country = country_match.group(1).upper() if country_match else "A"
+
+# Generate FOL facts
+facts = []
+
+if re.search(r"American citizen|American", statement, re.I):
+    facts.append(("American", seller))
+
+if re.search(r"missile", statement, re.I):
+    facts.append(("Missile", "T1"))
+
+if re.search(r"enemy of America", statement, re.I):
+    facts.append(("Enemy", country, "America"))
+
+if re.search(r"has some missiles|owns.*missiles", statement, re.I):
+    facts.append(("Owns", country, "T1"))
+
+# Generate FOL rules
+rules = [
+    "Missile(x) -> Weapon(x)",
+    "Enemy(x, America) -> Hostile(x)",
+    "Missile(x) AND Owns(A, x) -> Sells(Robert, x, A)",
+    "American(p) AND Weapon(q) AND Sells(p,q,r) AND Hostile(r) -> Criminal(p)"
 ]
 
-# Forward Chaining Function
-def forward_chaining(facts):
+# Replace names in rules
+rules[2] = rules[2].replace("Robert", seller).replace("A", country)
+rules[3] = rules[3].replace("Robert", seller)
 
-    new_fact_added = True
+print("\n========== GENERATED FOL ==========")
 
-    print("\nInitial Facts:")
-    for fact in facts:
-        print(fact)
+print("\nFacts:")
+for fact in facts:
+    print(fact)
 
-    while new_fact_added:
-        new_fact_added = False
+print("\nRules:")
+for rule in rules:
+    print(rule)
 
-        # Rule 1: Missile(x) -> Weapon(x)
-        for fact in facts.copy():
-            if fact[0] == "Missile":
-                new = ("Weapon", fact[1])
+# Forward Chaining
+changed = True
+
+while changed:
+    changed = False
+
+    for fact in facts.copy():
+
+        # Missile(x) -> Weapon(x)
+        if fact[0] == "Missile":
+            new = ("Weapon", fact[1])
+
+            if new not in facts:
+                facts.append(new)
+                print("Derived:", new)
+                changed = True
+
+        # Enemy(x, America) -> Hostile(x)
+        if fact[0] == "Enemy":
+            new = ("Hostile", fact[1])
+
+            if new not in facts:
+                facts.append(new)
+                print("Derived:", new)
+                changed = True
+
+    # Missile(x) AND Owns(A,x) -> Sells(Robert,x,A)
+    for f1 in facts.copy():
+        for f2 in facts.copy():
+
+            if (f1[0] == "Missile" and
+                f2[0] == "Owns" and
+                f2[1] == country and
+                f1[1] == f2[2]):
+
+                new = ("Sells", seller, f1[1], country)
 
                 if new not in facts:
                     facts.append(new)
                     print("Derived:", new)
-                    new_fact_added = True
+                    changed = True
 
-        # Rule 2: Missile(x) AND Owns(A,x)
-        # -> Sells(Robert,x,A)
-        for f1 in facts.copy():
-            for f2 in facts.copy():
-
-                if (f1[0] == "Missile" and
-                    f2[0] == "Owns" and
-                    f1[1] == f2[2] and
-                    f2[1] == "A"):
-
-                    new = ("Sells", "Robert", f1[1], "A")
-
-                    if new not in facts:
-                        facts.append(new)
-                        print("Derived:", new)
-                        new_fact_added = True
-
-        # Rule 3: Enemy(x,America) -> Hostile(x)
-        for fact in facts.copy():
-            if (fact[0] == "Enemy" and
-                fact[2] == "America"):
-
-                new = ("Hostile", fact[1])
-
-                if new not in facts:
-                    facts.append(new)
-                    print("Derived:", new)
-                    new_fact_added = True
-
-        # Rule 4:
-        # American(p) AND Weapon(q) AND
-        # Sells(p,q,r) AND Hostile(r)
-        # -> Criminal(p)
+    # Final criminal rule
+    if (("American", seller) in facts):
 
         for f1 in facts.copy():
             for f2 in facts.copy():
                 for f3 in facts.copy():
-                    for f4 in facts.copy():
 
-                        if (f1[0] == "American" and
-                            f2[0] == "Weapon" and
-                            f3[0] == "Sells" and
-                            f4[0] == "Hostile"):
+                    if (f1[0] == "Weapon" and
+                        f2[0] == "Sells" and
+                        f3[0] == "Hostile"):
 
-                            if (f3[1] == f1[1] and
-                                f3[2] == f2[1] and
-                                f3[3] == f4[1]):
+                        if (f2[1] == seller and
+                            f2[2] == f1[1] and
+                            f2[3] == f3[1]):
 
-                                new = ("Criminal", f1[1])
+                            new = ("Criminal", seller)
 
-                                if new not in facts:
-                                    facts.append(new)
-                                    print("Derived:", new)
-                                    new_fact_added = True
+                            if new not in facts:
+                                facts.append(new)
+                                print("Derived:", new)
+                                changed = True
 
-    return facts
+print("\n========== FINAL RESULT ==========")
 
-
-# Execute Forward Chaining
-print("\nForward Chaining Process:")
-result = forward_chaining(facts)
-
-# Check Goal
-print("\n======================================")
-print("             FINAL RESULT")
-print("======================================")
-
-if ("Criminal", "Robert") in result:
-    print("Goal Proved: Robert is Criminal")
+if ("Criminal", seller) in facts:
+    print("FOL Query: Criminal(" + seller + ")")
+    print("Goal Proved:", seller, "is Criminal")
 else:
-    print("Goal Not Proved")
+    print("Goal cannot be proved from the given statement.")
 
-print("======================================")
-print("             END OF PROGRAM")
 print("======================================")
