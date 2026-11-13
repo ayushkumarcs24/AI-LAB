@@ -1,27 +1,36 @@
-======================================
-          BMSCE - AI LAB
+=====================================
+           BMSCE - AI LAB
 ======================================
 Name : AYUSH KUMAR
-USN  : 1WA24CS074
+USN  : YOUR_USN
 Experiment: Forward Chaining
 ======================================
 
-Forward Chaining Process:
+Enter the problem statement
+(Press Enter twice to finish):
+As per the law, it is a crime for an American to sell weapons to hostile nations. Country A, an enemy of
+America, has some missiles, and all the missiles were sold to it by Robert, who is an American citizen."
 
-Initial Facts:
+
+========== GENERATED FOL ==========
+
+Facts:
 ('American', 'Robert')
 ('Missile', 'T1')
-('Owns', 'A', 'T1')
 ('Enemy', 'A', 'America')
+('Owns', 'A', 'T1')
+
+Rules:
+Missile(x) -> Weapon(x)
+Enemy(x, America) -> Hostile(x)
+Missile(x) AND Owns(A, x) -> Sells(Robert, x, A)
+American(p) AND Weapon(q) AND Sells(p,q,r) AND Hostile(r) -> Criminal(p)
 Derived: ('Weapon', 'T1')
-Derived: ('Sells', 'Robert', 'T1', 'A')
 Derived: ('Hostile', 'A')
+Derived: ('Sells', 'Robert', 'T1', 'A')
 Derived: ('Criminal', 'Robert')
 
-======================================
-             FINAL RESULT
-======================================
+========== FINAL RESULT ==========
+FOL Query: Criminal(Robert)
 Goal Proved: Robert is Criminal
-======================================
-             END OF PROGRAM
 ======================================
