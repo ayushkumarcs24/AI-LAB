@@ -1,0 +1,27 @@
+======================================
+          BMSCE - AI LAB
+======================================
+Name : AYUSH KUMAR
+USN  : 1WA24CS074
+Experiment: Forward Chaining
+======================================
+
+Forward Chaining Process:
+
+Initial Facts:
+('American', 'Robert')
+('Missile', 'T1')
+('Owns', 'A', 'T1')
+('Enemy', 'A', 'America')
+Derived: ('Weapon', 'T1')
+Derived: ('Sells', 'Robert', 'T1', 'A')
+Derived: ('Hostile', 'A')
+Derived: ('Criminal', 'Robert')
+
+======================================
+             FINAL RESULT
+======================================
+Goal Proved: Robert is Criminal
+======================================
+             END OF PROGRAM
+======================================
